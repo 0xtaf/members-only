@@ -1,0 +1,19 @@
+extends layout
+
+block content
+  h1= title
+  
+  form(method='POST', action='')
+    label(for='firstName') First Name: 
+    input#firstName(type="text" name="firstName" required=true)
+    label(for='lastName') Last Name:
+    input#lastName(type="text" name="lastName" required=true)
+    label(for='username') Username:
+    input#username(type="text" name="username" required=true)
+    label(for='password') Password:
+    input#password(type="password" name="password" required=true)
+    button(type="submit") Sign Up
+  <br>
+  <br>
+  a(href="/login") Login
+
