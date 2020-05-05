@@ -12,6 +12,29 @@ router.get('/', function (req, res, next) {
 router.get('/register', (req, res, next) => {
   res.render('register', { title: 'Register Page' });
 });
+router.post('/post', (req,res,next) => {
+  const { postarea } = req.body;
+  console.log(req.body)
+  console.log(req.session)
+  let newPost = new Post({
+    message: postarea,
+    createdBy: req.session.passport.user,
+    createdAt: Date.now()
+  })
+  newPost.save((err) => {
+    if (err) {
+      res.status(500).json({
+        message: { msgBody: 'Could not be saved', msgError: err },
+      });
+    } else
+      res.status(201).json({
+        message: {
+          msgBody: 'Post successfully created',
+          msgError: false,
+        },
+      });
+  })
+})
 router.post('/register', (req, res, next) => {
   const { firstName, lastName, username, password } = req.body;
   User.findOne({ username }, (err, user) => {
@@ -57,13 +80,29 @@ router.get('/inside', (req, res, next) => {
   res.render('inside', { title: 'Inside Page' });
 });
 
-router.post(
-  '/login',
-  passport.authenticate('local', {
-    successRedirect: '/inside',
-    failureRedirect: '/login',
-  })
-);
+// router.post(
+
+//   '/login',
+//   passport.authenticate('local', {
+//     successRedirect: '/inside',
+//     failureRedirect: '/login',
+//   })
+  
+// );
+router.post('/login', function(req, res, next) {
+  passport.authenticate('local', function(err, user, info) {
+    
+    if (err) { return next(err); }
+    if (!user) { return res.redirect('/login'); }
+    req.logIn(user, function(err) {
+      if (err) { return next(err); }
+      
+      return res.redirect('/inside');
+    });
+  })(req, res, next),
+  console.log(req.session)
+});
+
 
 router.get('/logout', (req, res) => {
   req.logout();

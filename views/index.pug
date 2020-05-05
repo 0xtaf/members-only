@@ -3,3 +3,14 @@ extends layout
 block content
   h1= title
   p Welcome to #{title}
+
+  form(method='POST', action='/post')
+    label(for='postarea') Post: 
+    input#postarea(type="textarea" name="postarea" required=true)
+    button(type="submit") Send
+  <br>
+  <br>
+  a(href="/login") Login
+  <br>
+  <br>
+  a(href="/register") Register
