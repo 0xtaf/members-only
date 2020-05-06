@@ -2,8 +2,9 @@ extends layout
 
 block content
   .login
-    a(href="/login") Login
-    a(href="/") Home
+    .nav
+      a(href="/login") Login
+      a(href="/") Home
   if (!currentUser)
 
     form(method='POST' action='')

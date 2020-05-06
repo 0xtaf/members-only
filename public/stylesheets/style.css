@@ -69,7 +69,7 @@ a {
   font-weight: 300;
 }
 
-.login a{
+.login .nav a{
   display: inline-block;
   margin: 1rem;
   font-size: 2em;
@@ -115,4 +115,79 @@ button {
   font-family: inherit;
   background-color: #ddd;
   margin-top: 2rem;
+}
+
+.login .posts{
+  display: block;
+  width: 84vw;
+  overflow: auto;
+  display: grid;
+  grid-template-columns: 2.5fr 4fr 1fr;
+  grid-gap: 5vh;
+}
+
+.login .post{
+  grid-column: 2;
+}
+
+.login .message p{
+  width: 96%;
+  height: 3rem;
+  border: 1px solid rgba(0,0,0,0.2);
+  padding-left: 2%;
+  padding-right: 2%;
+  font-size: inherit;
+  font-family: inherit;
+  background-color: white;
+  overflow: overlay;
+  font-size: 1.17em;
+}
+
+.login .date {
+  text-align: right;
+}
+
+h2{
+  overflow: auto;
+  width: 100%;
+  margin-bottom: 1rem;
+  font-weight: 600;
+  font-size: 1.5em;
+  text-align: center;
+}
+
+.hello {
+  font-size: 2em;
+  margin-top: 1rem;
+  margin-left: 1rem;
+}
+
+.formclass{
+  margin-top: -1vh;
+}
+
+form textarea{
+  height: 5.5vh;
+  padding-top: 1.5%;
+  padding-bottom: 1.5%;
+  min-height: 42px;
+  resize: none;
+  width: 100%;
+}
+
+button.inside{
+  border-radius: 5px;
+  height: 2rem;
+  border: 1px solid rgba(0,0,0,0.2);
+  padding-left: 2%;
+  padding-right: 2%;
+  font-size: inherit;
+  font-family: inherit;
+  background-color: #ddd;
+  margin-top: 1rem;
+  width: 8vw;
+}
+
+.insideform{
+  margin-top: 0;
 }

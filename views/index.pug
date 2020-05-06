@@ -3,19 +3,33 @@ extends layout
 block content
   
   .login
-    if (currentUser) 
+    if (currentUser)
+      .nav
+        a(href="/logout") Log Out 
 
-      p Hello #{currentUser.first_name}
-      form(method='POST', action='/post')
+      p.hello Hello #{currentUser.first_name} !
+      form(method='POST', action='/post').insideform
         label(for='postarea') Post: 
-        input#postarea(type="textarea" name="postarea" required=true)
-        button(type="submit") Send
-        <br>
-        <br>
-    else
+        textarea#postarea(type="textarea" name="postarea" required=true)
+        button(type="submit").inside Send
 
-      a(href="/register") Register
-    
-      a(href="/login") Login
+
+    else
+      .nav
+        a(href="/register") Register
+      
+        a(href="/login") Login
+      
+      
+      h2 Member Posts
+      .posts
         
-       
+        for item in data
+          .post
+            .date
+              p #{item.formatted}
+            .message
+              p #{item.message}
+            .createdby
+              p Author: #{item.createdBy.charAt(0)}***
+            

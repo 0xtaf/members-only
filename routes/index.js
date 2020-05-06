@@ -19,7 +19,15 @@ router.use(function(req, res, next) {
 
 /* routers. */
 router.get('/', function (req, res, next) {
-  res.render('index', { title: 'Members Only' });
+  Post.find((err, results)=>{
+    if (err){
+      return next(err)
+    }
+    
+    res.render('index', { data: results });
+  })
+  
+  
 });
 
 router.get('/register', (req, res, next) => {
