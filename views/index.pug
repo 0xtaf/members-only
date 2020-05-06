@@ -1,13 +1,16 @@
 extends layout
 
 block content
-  
+
   .login
     if (currentUser)
       .nav
-        a(href="/logout") Log Out 
+        a(href="/logout") Log Out
+         
 
-      p.hello Hello #{currentUser.first_name} !
+      p.hello Hello #{currentUser.first_name} ! You can 
+        a(href="/secretclub") Join The Secret Club
+        |&nbspif you want! Especially if you wanna learn the authors' identities!
       form(method='POST', action='/post').insideform
         label(for='postarea') Post: 
         textarea#postarea(type="textarea" name="postarea" required=true)
@@ -21,10 +24,10 @@ block content
         a(href="/login") Login
       
       
-      h2 Member Posts
-      .posts
-        
-        for item in data
+    h2 Member Posts
+    .posts
+      if (data)
+        for item in data.reverse()
           .post
             .date
               p #{item.formatted}
@@ -32,4 +35,3 @@ block content
               p #{item.message}
             .createdby
               p Author: #{item.createdBy.charAt(0)}***
-            

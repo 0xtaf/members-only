@@ -1,12 +1,12 @@
 extends layout
 
 block content
-  .login
-    .nav
-      a(href="/login") Login
-      a(href="/") Home
-  if (!currentUser)
 
+  if (!currentUser)
+    .login
+      .nav
+        a(href="/login") Login
+        a(href="/") Home
     form(method='POST' action='')
       .tablegroup2
         label(for='firstName') First Name: 
@@ -22,7 +22,13 @@ block content
         input#password(type="password" name="password" required=true)
         button(type="submit") Sign Up
 
-  else  
-    p you are already signed up!  
+  else
+    .login
+      .nav
+        a(href="/logout") Log out
+        a(href="/") Home  
+      p.register you are already signed up! 
+        a(href="/") Go Home
+
   
 

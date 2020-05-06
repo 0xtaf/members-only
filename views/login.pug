@@ -1,6 +1,10 @@
 extends layout
 
 block content
+  if (msg==='registersuccessful')
+    p.msg Register is successful, you can log in now.
+  if (msg==='loginfailed')
+    p.msg Either username or password is wrong.
   .login
     .nav
       a(href="/register") Register

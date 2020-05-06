@@ -53,12 +53,7 @@ router.post('/post', [
           message: { msgBody: 'Could not be saved', msgError: err },
         });
       } else
-        res.status(201).json({
-          message: {
-            msgBody: 'Post successfully created',
-            msgError: false,
-          },
-        });
+        res.redirect('/')
     });
   },
 ]);
@@ -96,12 +91,8 @@ router.post('/register', [
               message: { msgBody: 'Could not be saved', msgError: err },
             });
           } else
-            res.status(201).json({
-              message: {
-                msgBody: 'Account successfully created',
-                msgError: false,
-              },
-            });
+            var status = encodeURIComponent('registersuccessful');
+            res.redirect('/login?valid=' + status);
         });
       }
     });
@@ -109,7 +100,8 @@ router.post('/register', [
 ]);
 
 router.get('/login', (req, res, next) => {
-  res.render('login', { title: 'Login Page' });
+  let passedVariable = req.query.valid;
+  res.render('login', { msg: passedVariable});
 });
 
 // router.post(
@@ -134,13 +126,16 @@ router.post('/login', [
   (req, res, next) => {
     passport.authenticate('local', function (err, user, info) {
       if (err) {
+        console.log("1")
         return next(err);
       }
       if (!user) {
-        return res.redirect('/login');
+        var loginstatus = encodeURIComponent('loginfailed');
+        return res.redirect('/login?valid='+loginstatus);
       }
       req.logIn(user, function (err) {
         if (err) {
+          console.log("3")
           return next(err);
         }
 
