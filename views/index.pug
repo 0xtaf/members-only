@@ -3,9 +3,9 @@ extends layout
 block content
   h1= title
   p Welcome to #{title}
+  if (currentUser) 
 
-  if (user)
-    p Hello #{user.first_name}
+    p Hello #{currentUser.first_name}
     form(method='POST', action='/post')
       label(for='postarea') Post: 
       input#postarea(type="textarea" name="postarea" required=true)

@@ -7,9 +7,16 @@ const Post = require('../models/post');
 
 const { body } = require('express-validator');
 
+//watch out this. this prevents me to hard code the current user in the views
+//because it attaches the req.user in the middleware and define it to currentUser var.
+router.use(function(req, res, next) {
+  res.locals.currentUser = req.user;
+  next();
+});
+
 /* GET home page. */
 router.get('/', function (req, res, next) {
-  res.render('index', { title: 'Members Only', user: req.user });
+  res.render('index', { title: 'Members Only' });
 });
 router.get('/register', (req, res, next) => {
   res.render('register', { title: 'Register Page' });
@@ -74,8 +81,6 @@ router.post('/register', [
         // console.log(newUser);
         newUser.save((err) => {
           if (err) {
-            console.log(newUser);
-
             res.status(500).json({
               message: { msgBody: 'Could not be saved', msgError: err },
             });
@@ -130,8 +135,9 @@ router.post('/login', [
 
         return res.redirect('/');
       });
-    })(req, res, next),
-      console.log(req.session);
+    }
+    )(req, res, next)
+      // console.log(req.session);
   },
 ]);
 
