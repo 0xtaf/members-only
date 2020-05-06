@@ -3,7 +3,7 @@ const Schema = mongoose.Schema;
 
 const PostSchema = new Schema({
   message: { type: String, min: 2, max: 100, required: true },
-  createdBy: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+  createdBy: { type: String, required: true },
   createdAt: { type: Date, required: true, default: Date.now() },
 });
 
