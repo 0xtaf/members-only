@@ -81,7 +81,7 @@ a {
 form {
   display: grid;
   grid-template-columns: 1fr;
-  margin: 4vh 35vw;
+  margin: 4vh 30vw;
   font-size: 1.5em;
 }
 

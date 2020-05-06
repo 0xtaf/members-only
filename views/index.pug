@@ -7,14 +7,21 @@ block content
       .nav
         a(href="/logout") Log Out
          
+      if (!currentUser.membership)
+        p.hello Hello #{currentUser.first_name} ! You can 
+          a(href="/secretclub") Join The Secret Club
+          |&nbspif you want! Especially if you wanna learn the authors' identities and even write your own!
+      else 
+        p.hello Nothing is true, everything is permitted.
+        p.hello - #{currentUser.first_name}&nbspAuditore da Firenze
+      
 
-      p.hello Hello #{currentUser.first_name} ! You can 
-        a(href="/secretclub") Join The Secret Club
-        |&nbspif you want! Especially if you wanna learn the authors' identities!
-      form(method='POST', action='/post').insideform
-        label(for='postarea') Post: 
-        textarea#postarea(type="textarea" name="postarea" required=true)
-        button(type="submit").inside Send
+
+      if (currentUser.membership)
+        form(method='POST', action='/post').insideform
+          label(for='postarea') Post: 
+          textarea#postarea(type="textarea" name="postarea" required=true)
+          button(type="submit").inside Send
 
 
     else
@@ -22,7 +29,9 @@ block content
         a(href="/register") Register
       
         a(href="/login") Login
-      
+      p.hello Welcome stranger! Don't miss the opportunity to have fun inside!  
+        a(href="/register") Register
+        |&nbsphere!
       
     h2 Member Posts
     .posts
