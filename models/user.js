@@ -1,5 +1,7 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
+
+//crypt here
 const bcrypt = require('bcryptjs')
 
 const UserSchema = new Schema({
@@ -10,6 +12,8 @@ const UserSchema = new Schema({
   membership: { type: Boolean, required: true, default: false },
 });
 
+
+//pre save the schema. check if the pass got modified
 UserSchema.pre('save',function(next){
   if(!this.isModified('password'))
       return next();
@@ -21,7 +25,7 @@ UserSchema.pre('save',function(next){
   });
 });
 
-
+//add compare method to the schema.
 UserSchema.methods.comparePassword = function(password, cb){
   bcrypt.compare(password, this.password, (err, isMatch) => {
     if (err) {

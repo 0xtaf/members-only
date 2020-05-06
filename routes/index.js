@@ -1,10 +1,13 @@
+//default settings
 var express = require('express');
 var router = express.Router();
 const passport = require('passport');
-// const passportConfig = require('../passport');
+
+//models to be used
 const User = require('../models/user');
 const Post = require('../models/post');
 
+//the old one is deprecated
 const { body } = require('express-validator');
 
 //watch out this. this prevents me to hard code the current user in the views
@@ -14,13 +17,15 @@ router.use(function(req, res, next) {
   next();
 });
 
-/* GET home page. */
+/* routers. */
 router.get('/', function (req, res, next) {
   res.render('index', { title: 'Members Only' });
 });
+
 router.get('/register', (req, res, next) => {
   res.render('register', { title: 'Register Page' });
 });
+
 router.post('/post', [
   body('postarea', 'Fields cannot be empty.')
     .trim()
@@ -29,9 +34,6 @@ router.post('/post', [
 
   (req, res, next) => {
     const { postarea } = req.body;
-    // console.log(req.body);
-    // console.log(req.session);
-    // console.log("this is user: ",req.user);
     let newPost = new Post({
       message: postarea,
       createdBy: req.user.first_name + ' ' + req.user.last_name,
@@ -52,6 +54,7 @@ router.post('/post', [
     });
   },
 ]);
+
 router.post('/register', [
   body('firstName', 'Fields cannot be empty.').trim().isLength({ min: 1 }),
   body('lastName', 'Fields cannot be empty.').trim().isLength({ min: 1 }),
@@ -141,10 +144,10 @@ router.post('/login', [
   },
 ]);
 
+//logout deals with closing sessions
 router.get('/logout', (req, res) => {
   req.logout();
   res.redirect('/');
 });
 
-router.use(passport.initialize());
 module.exports = router;

@@ -1,21 +1,21 @@
 extends layout
 
 block content
-  h1= title
-  p Welcome to #{title}
-  if (currentUser) 
+  
+  .login
+    if (currentUser) 
 
-    p Hello #{currentUser.first_name}
-    form(method='POST', action='/post')
-      label(for='postarea') Post: 
-      input#postarea(type="textarea" name="postarea" required=true)
-      button(type="submit") Send
-      <br>
-      <br>
-  else
+      p Hello #{currentUser.first_name}
+      form(method='POST', action='/post')
+        label(for='postarea') Post: 
+        input#postarea(type="textarea" name="postarea" required=true)
+        button(type="submit") Send
+        <br>
+        <br>
+    else
 
+      a(href="/register") Register
     
       a(href="/login") Login
-      <br>
-      <br>
-      a(href="/register") Register
+        
+       
