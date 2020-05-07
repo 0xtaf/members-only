@@ -2,32 +2,30 @@
 var express = require('express');
 var router = express.Router();
 const passport = require('passport');
-
+require('dotenv').config();
 //models to be used
 const User = require('../models/user');
 const Post = require('../models/post');
 
 //the old one is deprecated
-const { body } = require('express-validator');
+const { body, validationResult } = require('express-validator');
 
 //watch out this. this prevents me to hard code the current user in the views
 //because it attaches the req.user in the middleware and define it to currentUser var.
-router.use(function(req, res, next) {
+router.use(function (req, res, next) {
   res.locals.currentUser = req.user;
   next();
 });
 
 /* routers. */
 router.get('/', function (req, res, next) {
-  Post.find((err, results)=>{
-    if (err){
-      return next(err)
+  Post.find((err, results) => {
+    if (err) {
+      return next(err);
     }
-    
+
     res.render('index', { data: results });
-  })
-  
-  
+  });
 });
 
 router.get('/register', (req, res, next) => {
@@ -52,8 +50,7 @@ router.post('/post', [
         res.status(500).json({
           message: { msgBody: 'Could not be saved', msgError: err },
         });
-      } else
-        res.redirect('/')
+      } else res.redirect('/');
     });
   },
 ]);
@@ -62,48 +59,99 @@ router.post('/register', [
   body('firstName', 'Fields cannot be empty.').trim().isLength({ min: 1 }),
   body('lastName', 'Fields cannot be empty.').trim().isLength({ min: 1 }),
   body('username', 'Fields cannot be empty.').trim().isLength({ min: 1 }),
-
+  body(
+    'passwordConfirmation',
+    'passwords must match'
+  )
+    .exists()
+    .custom((value, { req }) => value === req.body.password),
   body('*').escape(),
 
   (req, res, next) => {
     const { firstName, lastName, username, password } = req.body;
-    User.findOne({ username }, (err, user) => {
-      if (err) {
-        res
-          .status(500)
-          .json({ message: { msgBody: 'Error has occured', msgError: true } });
-      }
-      if (user) {
-        res.status(500).json({
-          message: { msgBody: 'Username is already taken', msgError: true },
-        });
-      } else {
-        let newUser = new User({
-          first_name: firstName,
-          last_name: lastName,
-          username: username,
-          password: password,
-        });
-        // console.log(newUser);
-        newUser.save((err) => {
-          if (err) {
-            res.status(500).json({
-              message: { msgBody: 'Could not be saved', msgError: err },
-            });
-          } else
-            var status = encodeURIComponent('registersuccessful');
-            res.redirect('/login?valid=' + status);
-        });
-      }
+
+    const errors = validationResult(req);
+    let newUser = new User({
+      first_name: firstName,
+      last_name: lastName,
+      username: username,
+      password: password,
     });
+
+    if (!errors.isEmpty()) {
+      res.render('register', {
+        title: 'Register Page',
+        data: newUser,
+        errors: errors.array(),
+      });
+    } else {
+      User.findOne({ username }, (err, user) => {
+        if (err) {
+          res
+            .status(500)
+            .json({
+              message: { msgBody: 'Error has occured', msgError: true },
+            });
+        }
+        if (user) {
+          res.status(500).json({
+            message: { msgBody: 'Username is already taken', msgError: true },
+          });
+        } else {
+          let newUser = new User({
+            first_name: firstName,
+            last_name: lastName,
+            username: username,
+            password: password,
+          });
+          // console.log(newUser);
+          newUser.save((err) => {
+            if (err) {
+              res.status(500).json({
+                message: { msgBody: 'Could not be saved', msgError: err },
+              });
+            } else var status = encodeURIComponent('registersuccessful');
+            res.redirect('/login?valid=' + status);
+          });
+        }
+      });
+    }
   },
 ]);
 
 router.get('/login', (req, res, next) => {
   let passedVariable = req.query.valid;
-  res.render('login', { msg: passedVariable});
+  res.render('login', { msg: passedVariable });
 });
 
+router.get('/secretclub', (req, res, next) => {
+  let passedVariable = req.query.entrance;
+  res.render('secretclub', { msg: passedVariable });
+});
+
+router.post('/vault', (req, res, next) => {
+  if (req.body.secret === process.env.SECRET_VAULT) {
+    let isMember = new User({
+      membership: true,
+    });
+
+    User.findByIdAndUpdate(
+      req.user._id,
+      { membership: true },
+      {},
+      (err, success) => {
+        console.log(success);
+        if (err) {
+          return next(err);
+        }
+        res.redirect('/');
+      }
+    );
+  } else {
+    var member = encodeURIComponent('failed');
+    res.redirect('/secretclub?entrance=' + member);
+  }
+});
 // router.post(
 
 //   '/login',
@@ -126,24 +174,23 @@ router.post('/login', [
   (req, res, next) => {
     passport.authenticate('local', function (err, user, info) {
       if (err) {
-        console.log("1")
+        console.log('1');
         return next(err);
       }
       if (!user) {
         var loginstatus = encodeURIComponent('loginfailed');
-        return res.redirect('/login?valid='+loginstatus);
+        return res.redirect('/login?valid=' + loginstatus);
       }
       req.logIn(user, function (err) {
         if (err) {
-          console.log("3")
+          console.log('3');
           return next(err);
         }
-
+        console.log('4?');
         return res.redirect('/');
       });
-    }
-    )(req, res, next)
-      // console.log(req.session);
+    })(req, res, next);
+    console.log('5??');
   },
 ]);
 

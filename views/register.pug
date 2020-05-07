@@ -10,16 +10,19 @@ block content
     form(method='POST' action='')
       .tablegroup2
         label(for='firstName') First Name: 
-        input#firstName(type="text" name="firstName" required=true)
+        input#firstName(type="text" name="firstName" required=true value=(data === undefined ? '' : data.first_name))
       .tablegroup2
         label(for='lastName') Last Name:
-        input#lastName(type="text" name="lastName" required=true)
+        input#lastName(type="text" name="lastName" required=true value=(data === undefined ? '' : data.last_name))
       .tablegroup2
         label(for='username') Username:
-        input#username(type="text" name="username" required=true)
+        input#username(type="text" name="username" required=true value=(data === undefined ? '' : data.username))
       .tablegroup2
         label(for='password') Password:
         input#password(type="password" name="password" required=true)
+      .tablegroup2
+        label(for='passwordConfirmation') Confirm Password:
+        input#passwordConfirmation(type="password" name="passwordConfirmation" required=true)
         button(type="submit") Sign Up
 
   else
@@ -30,5 +33,8 @@ block content
       p.register you are already signed up! 
         a(href="/") Go Home
 
-  
+  if errors 
+    ul
+      for error in errors
+       li!= error.msg
 

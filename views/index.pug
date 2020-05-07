@@ -42,5 +42,14 @@ block content
               p #{item.formatted}
             .message
               p #{item.message}
-            .createdby
-              p Author: #{item.createdBy.charAt(0)}***
+            if (!currentUser)
+              .createdby
+                p Author: #{item.createdBy.charAt(0)}***
+            else
+              if (currentUser)
+                if (currentUser.membership)
+                  .createdby
+                    p.insideP Author: #{item.createdBy}
+                else
+                  .createdby
+                    p Author: #{item.createdBy.charAt(0)}***
