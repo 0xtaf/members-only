@@ -33,10 +33,7 @@ router.get('/register', (req, res, next) => {
 });
 
 router.post('/post', [
-  body('postarea', 'Fields cannot be empty.')
-    .trim()
-    .isLength({ min: 1 })
-    .escape(),
+  body('postarea', 'Fields cannot be empty.').trim().isLength({ min: 1 }),
 
   (req, res, next) => {
     const { postarea } = req.body;
@@ -47,9 +44,7 @@ router.post('/post', [
     });
     newPost.save((err) => {
       if (err) {
-        res.status(500).json({
-          message: { msgBody: 'Could not be saved', msgError: err },
-        });
+        return next(err);
       } else res.redirect('/');
     });
   },
@@ -59,10 +54,7 @@ router.post('/register', [
   body('firstName', 'Fields cannot be empty.').trim().isLength({ min: 1 }),
   body('lastName', 'Fields cannot be empty.').trim().isLength({ min: 1 }),
   body('username', 'Fields cannot be empty.').trim().isLength({ min: 1 }),
-  body(
-    'passwordConfirmation',
-    'passwords must match'
-  )
+  body('passwordConfirmation', 'passwords must match')
     .exists()
     .custom((value, { req }) => value === req.body.password),
   body('*').escape(),
@@ -87,15 +79,19 @@ router.post('/register', [
     } else {
       User.findOne({ username }, (err, user) => {
         if (err) {
-          res
-            .status(500)
-            .json({
-              message: { msgBody: 'Error has occured', msgError: true },
-            });
+          return next(err);
         }
         if (user) {
-          res.status(500).json({
-            message: { msgBody: 'Username is already taken', msgError: true },
+          let newUser = new User({
+            first_name: firstName,
+            last_name: lastName,
+            username: username,
+            password: password,
+          });
+          res.render('register', {
+            title: 'Register Page',
+            data: newUser,
+            errors: [{ msg: 'Username is already taken.' }],
           });
         } else {
           let newUser = new User({
@@ -104,12 +100,10 @@ router.post('/register', [
             username: username,
             password: password,
           });
-          // console.log(newUser);
+
           newUser.save((err) => {
             if (err) {
-              res.status(500).json({
-                message: { msgBody: 'Could not be saved', msgError: err },
-              });
+              return next(err);
             } else var status = encodeURIComponent('registersuccessful');
             res.redirect('/login?valid=' + status);
           });
@@ -131,16 +125,11 @@ router.get('/secretclub', (req, res, next) => {
 
 router.post('/vault', (req, res, next) => {
   if (req.body.secret === process.env.SECRET_VAULT) {
-    let isMember = new User({
-      membership: true,
-    });
-
     User.findByIdAndUpdate(
       req.user._id,
       { membership: true },
       {},
       (err, success) => {
-        console.log(success);
         if (err) {
           return next(err);
         }
@@ -174,7 +163,6 @@ router.post('/login', [
   (req, res, next) => {
     passport.authenticate('local', function (err, user, info) {
       if (err) {
-        console.log('1');
         return next(err);
       }
       if (!user) {
@@ -183,14 +171,13 @@ router.post('/login', [
       }
       req.logIn(user, function (err) {
         if (err) {
-          console.log('3');
           return next(err);
         }
-        console.log('4?');
+
         return res.redirect('/');
       });
     })(req, res, next);
-    console.log('5??');
+    console.log('is something happening??');
   },
 ]);
 

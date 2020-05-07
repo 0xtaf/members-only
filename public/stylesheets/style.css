@@ -208,3 +208,7 @@ form input#secret {
   font-weight: 700;
   color: darkgreen;
 }
+
+li{
+  color:red;
+}

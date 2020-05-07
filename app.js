@@ -51,7 +51,7 @@ app.use(
     saveUninitialized: true,
     store: sessionStore,
     cookie: {
-      maxAge: 5 * 60 * 1000, // 
+      maxAge: 60 * 60 * 1000, // cookie expires after 1h
     },
   })
 );
