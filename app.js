@@ -9,13 +9,13 @@ var logger = require('morgan');
 require('./config/passport');
 const passport = require('passport');
 const session = require('express-session');
+var flash = require('connect-flash');
 
 //save session to mongo
 const MongoStore = require('connect-mongo')(session);
 
 //routes
 var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
 
 //self explanatory
 require('dotenv').config();
@@ -55,6 +55,7 @@ app.use(
     },
   })
 );
+app.use(flash());
 
 //after** express-session. initialize passport.js
 app.use(passport.initialize());
@@ -69,7 +70,6 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 //define which routes to use
 app.use('/', indexRouter);
-app.use('/users', usersRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
