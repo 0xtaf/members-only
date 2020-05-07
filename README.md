@@ -1,6 +1,6 @@
 # Members-Only Club
 
-- This app was created with Node.js, by using Express framework.  
+- [This app](https://secret-members.herokuapp.com/) was created with Node.js, by using Express framework.  
 - The purpose was to implement **session authentication** 
 - [Passport.js](https://passportjs.org/) was used for handling session processes.  
 - User registration, post saving and session saving were implemented with **Mongo DB**
